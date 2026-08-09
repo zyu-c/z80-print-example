@@ -37,10 +37,34 @@ void puts(const uint8_t* str) {
     }
 }
 
+void print_hex4(uint8_t value) {
+    value &= 0x0F;
+    if (value < 0x0A) {
+        putc('0' + value);
+    } else {
+        putc('A' + value - 0x0A);
+    }
+}
+
+void print_hex16(uint16_t value) {
+    print_hex4((uint8_t)(value >> 12));
+    print_hex4((uint8_t)(value >> 8));
+    print_hex4((uint8_t)(value >> 4));
+    print_hex4((uint8_t)value);
+}
+
 void main() {
     initializeCtc();
     initializeSio();
 
-    puts("HelloWorld!\r\n");
+    for (uint16_t i = 0;; i++) {
+        puts("0x");
+        print_hex16(i);
+        putc('\n');
+        if (i == 0xFFFF) {
+            break;
+        }
+    }
+
     while (1);
 }
