@@ -1,3 +1,5 @@
+#include "io.h"
+
 int count = 123;
 
 int zero;

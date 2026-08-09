@@ -17,9 +17,11 @@ DISASM = z80dasm
 
 CRT0_SRC = $(wildcard *.s) 
 C_SRC = $(wildcard Src/*.c)
+ASM_SRC = $(wildcard Src/*.asm)
 
 CRT0_REL = $(BUILD_DIR)/$(CRT0_SRC:.s=.rel)
 OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SRC:.c=.rel)))
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SRC:.asm=.rel)))
 
 CODE_ADDR = 0x0200
 DATA_ADDR = 0x8000
@@ -44,7 +46,10 @@ $(BUILD_DIR)/%.rel: $(BUILD_DIR)/%.asm Makefile | $(BUILD_DIR)
 	$(SDASZ80) -l -o $@ $<
 
 $(BUILD_DIR)/%.asm: Src/%.c Makefile | $(BUILD_DIR)
-	$(SDCC) -mz80 -S -o $@ $<
+	$(SDCC) -mz80 -IInc -S -o $@ $<
+
+$(BUILD_DIR)/%.rel: Src/%.asm Makefile | $(BUILD_DIR)
+	$(SDASZ80) -l -o $@ $<
 
 $(CRT0_REL): $(CRT0_SRC) Makefile| $(BUILD_DIR)
 	$(SDASZ80) -l -o $@ $<
