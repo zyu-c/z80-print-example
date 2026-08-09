@@ -31,7 +31,7 @@ void putc(uint8_t data) {
     io_out(SIOA_D, data);
 }
 
-void puts(const char* str) {
+void puts(const uint8_t* str) {
     while (*str) {
         putc(*str++);
     }
