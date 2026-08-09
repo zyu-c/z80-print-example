@@ -29,7 +29,7 @@ DATA_ADDR = 0x8000
 .PHONY: all clean
 .SECONDARY:
 
-all: $(BUILD_DIR)/$(TARGET).bin $(BUILD_DIR)/$(TARGET).dis
+all: $(BUILD_DIR)/$(TARGET).bin $(BUILD_DIR)/$(TARGET).dis $(BUILD_DIR)/$(TARGET).h
 clean:
 	rm -rf $(BUILD_DIR)
 
@@ -56,3 +56,6 @@ $(CRT0_REL): $(CRT0_SRC) Makefile| $(BUILD_DIR)
 
 $(BUILD_DIR)/%.dis: $(BUILD_DIR)/%.bin | $(BUILD_DIR)
 	$(DISASM) -a -l -t -g 0x0000 -o $@ $<
+
+$(BUILD_DIR)/$(TARGET).h: $(BUILD_DIR)/$(TARGET).bin | $(BUILD_DIR)
+	xxd -i $< > $@
