@@ -1,18 +1,16 @@
+#include <stdint.h>
+
 #include "io.h"
+#include "port.h"
 
-int count = 123;
+void initializeCtc() {
+    // 割り込み不可、タイマモード、16分周
+    io_out(CTC_CH3, 0x07);
+    // タイムコンスタント = 4
+    io_out(CTC_CH3, 0x04);
+}
 
-int zero;
-
-const char msg[] = "ABC";
-
-void func() {}
-
-void main(void) {
-    count++;
-    zero = 5;
-
-    func();
-
+void main() {
+    initializeCtc();
     while (1);
 }
