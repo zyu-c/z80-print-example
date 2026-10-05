@@ -1,7 +1,8 @@
 #ifndef PORT_H
 #define PORT_H
 
-// Super AKI-80 I/Oポート定義
+// Super AKI-80のIOポートマップ
+
 #define CTC_CH0 0x10  // CTCチャンネル0
 #define CTC_CH1 0x11  // CTCチャンネル1
 #define CTC_CH2 0x12  // CTCチャンネル2

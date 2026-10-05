@@ -3,6 +3,9 @@
 #include "io.h"
 #include "port.h"
 
+/**
+ * @brief CTC3の初期化
+ */
 void initializeCtc() {
     // 9.8304MHz / 16分周 / 4 = 153.6kHz
     // 割り込み不可、タイマモード、16分周
@@ -11,6 +14,10 @@ void initializeCtc() {
     io_out(CTC_CH3, 0x04);
 }
 
+/**
+ * @brief SIOAの初期化
+ * @note UART出力用 (9600bps)
+ */
 void initializeSio() {
     // WR0、チャネルリセット
     io_out(SIOA_C, 0x18);
@@ -24,19 +31,35 @@ void initializeSio() {
     io_out(SIOA_C, 0x68);
 }
 
+/**
+ * @brief SIOAのコマンド/ステータスレジスタを取得する
+ * @return SIOAのコマンド/ステータスレジスタの値
+ */
 uint8_t getSioStatus() { return io_in(SIOA_C); }
 
+/**
+ * @brief 1文字を送信する
+ * @param data 送信する文字
+ */
 void putc(uint8_t data) {
     while (!(getSioStatus() & 0x04));  // 送信可能になるまで待つ
     io_out(SIOA_D, data);
 }
 
+/**
+ * @brief 文字列を出力する
+ * @param str 出力する文字列
+ */
 void puts(const uint8_t* str) {
     while (*str) {
         putc(*str++);
     }
 }
 
+/**
+ * @brief 4bitの数値を16進数1桁として出力する
+ * @param value 出力する数値
+ */
 void print_hex4(uint8_t value) {
     value &= 0x0F;
     if (value < 0x0A) {
@@ -46,6 +69,10 @@ void print_hex4(uint8_t value) {
     }
 }
 
+/**
+ * @brief 16bitの数値を16進数4桁として出力する
+ * @param value 出力する数値
+ */
 void print_hex16(uint16_t value) {
     print_hex4((uint8_t)(value >> 12));
     print_hex4((uint8_t)(value >> 8));
