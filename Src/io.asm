@@ -7,12 +7,8 @@
 
 ; void io_out(uint8_t port, uint8_t value);
 _io_out:
-    ld hl, #2               ; hl = 2
-    add hl, sp              ; hl = hl + sp = sp + 2 = port
-    ld c, (hl)              ; c = port
-    
-    inc hl                  ; hl = hl + 1 = value
-    ld a, (hl)              ; a = value
+    ld c, a                 ; c = port
+    ld a, l                 ; a = value
 
     out (c), a              ; portにvalueを出力
     ret
@@ -20,10 +16,7 @@ _io_out:
 
 ; uint8_t io_in(uint8_t port);
 _io_in:
-
-    ld hl, #2               ; hl = 2
-    add hl, sp              ; hl = hl + sp = sp + 2 = port
-    ld c, (hl)              ; c = port
+    ld c, a                 ; c = port
 
     in a, (c)               ; aにportの値を入力
 
