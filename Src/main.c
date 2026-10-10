@@ -41,7 +41,7 @@ uint8_t getSioStatus() { return io_in(SIOA_C); }
  * @brief 1文字を送信する
  * @param data 送信する文字
  */
-void putc(uint8_t data) {
+void uart_putc(uint8_t data) {
     while (!(getSioStatus() & 0x04));  // 送信可能になるまで待つ
     io_out(SIOA_D, data);
 }
@@ -50,9 +50,9 @@ void putc(uint8_t data) {
  * @brief 文字列を出力する
  * @param str 出力する文字列
  */
-void puts(const uint8_t* str) {
+void uart_puts(const uint8_t* str) {
     while (*str) {
-        putc(*str++);
+        uart_putc(*str++);
     }
 }
 
@@ -60,12 +60,12 @@ void puts(const uint8_t* str) {
  * @brief 4bitの数値を16進数1桁として出力する
  * @param value 出力する数値
  */
-void print_hex4(uint8_t value) {
+void uart_hex4(uint8_t value) {
     value &= 0x0F;
     if (value < 0x0A) {
-        putc('0' + value);
+        uart_putc('0' + value);
     } else {
-        putc('A' + value - 0x0A);
+        uart_putc('A' + value - 0x0A);
     }
 }
 
@@ -73,11 +73,11 @@ void print_hex4(uint8_t value) {
  * @brief 16bitの数値を16進数4桁として出力する
  * @param value 出力する数値
  */
-void print_hex16(uint16_t value) {
-    print_hex4((uint8_t)(value >> 12));
-    print_hex4((uint8_t)(value >> 8));
-    print_hex4((uint8_t)(value >> 4));
-    print_hex4((uint8_t)value);
+void uart_hex16(uint16_t value) {
+    uart_hex4((uint8_t)(value >> 12));
+    uart_hex4((uint8_t)(value >> 8));
+    uart_hex4((uint8_t)(value >> 4));
+    uart_hex4((uint8_t)value);
 }
 
 void main() {
@@ -85,9 +85,9 @@ void main() {
     initializeSio();
 
     for (uint16_t i = 0;; i++) {
-        puts("0x");
-        print_hex16(i);
-        putc('\n');
+        uart_puts("0x");
+        uart_hex16(i);
+        uart_putc('\n');
         if (i == 0xFFFF) {
             break;
         }
