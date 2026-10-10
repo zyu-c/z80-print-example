@@ -20,8 +20,9 @@ C_SRC = $(wildcard Src/*.c)
 ASM_SRC = $(wildcard Src/*.asm)
 
 CRT0_REL = $(BUILD_DIR)/$(CRT0_SRC:.s=.rel)
-OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SRC:.c=.rel)))
-OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SRC:.asm=.rel)))
+OBJECTS = $(patsubst Src/%.c,$(BUILD_DIR)/%.rel,$(C_SRC))
+OBJECTS += $(patsubst Src/%.asm,$(BUILD_DIR)/%.rel,$(ASM_SRC))
+DEPFILES = $(patsubst Src/%.c,$(BUILD_DIR)/%.d,$(C_SRC))
 
 CODE_ADDR = 0x0200
 DATA_ADDR = 0x8000
@@ -47,6 +48,13 @@ $(BUILD_DIR)/%.rel: $(BUILD_DIR)/%.asm Makefile | $(BUILD_DIR)
 
 $(BUILD_DIR)/%.asm: Src/%.c Makefile | $(BUILD_DIR)
 	$(SDCC) -mz80 -IInc -S -o $@ $<
+
+$(BUILD_DIR)/%.d: Src/%.c Makefile | $(BUILD_DIR)
+	$(SDCC) -mz80 -IInc -MM $< \
+	| sed 's,^[^:]*:,$(BUILD_DIR)/$*.asm:,' \
+	> $@
+
+-include $(DEPFILES)
 
 $(BUILD_DIR)/%.rel: Src/%.asm Makefile | $(BUILD_DIR)
 	$(SDASZ80) -l -o $@ $<
