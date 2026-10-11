@@ -21,6 +21,10 @@ void initializeCtc() {
 void initializeSio() {
     // WR0、チャネルリセット
     io_out(SIOA_C, 0x18);
+    // 次の書き込み先にWR3を選択
+    io_out(SIOA_C, 0x03);
+    // WR3、CTS無効、受信無効
+    io_out(SIOA_C, 0xC0);
     // 次の書き込み先にWR4を選択
     io_out(SIOA_C, 0x04);
     // WR4、x16クロック、1ストップビット、パリティなし
