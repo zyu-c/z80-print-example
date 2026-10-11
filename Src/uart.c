@@ -20,8 +20,8 @@ void initializeSio() {
     io_out(SIOA_C, 0x18);
     // 次の書き込み先にWR3を選択
     io_out(SIOA_C, 0x03);
-    // WR3、CTS無効、受信無効
-    io_out(SIOA_C, 0xC0);
+    // WR3、CTS無効、受信有効
+    io_out(SIOA_C, 0xC1);
     // 次の書き込み先にWR4を選択
     io_out(SIOA_C, 0x04);
     // WR4、x16クロック、1ストップビット、パリティなし
@@ -68,4 +68,9 @@ void uart_hex16(uint16_t value) {
     uart_hex4((uint8_t)(value >> 8));
     uart_hex4((uint8_t)(value >> 4));
     uart_hex4((uint8_t)value);
+}
+
+uint8_t uart_getc() {
+    while (!(getSioStatus() & 0x01));  // 受信するまで待つ
+    return io_in(SIOA_D);
 }

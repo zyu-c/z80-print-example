@@ -36,4 +36,10 @@ void uart_hex4(uint8_t value);
  */
 void uart_hex16(uint16_t value);
 
+/**
+ * @brief 1文字を受信する
+ * @return 受信した文字
+ */
+uint8_t uart_getc();
+
 #endif  // UART_H
