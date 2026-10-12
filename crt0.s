@@ -1,6 +1,7 @@
 .module crt0
 
 .globl _main
+.globl _ctc_isr
 
 .globl  l__DATA             ; DATAエリアのサイズ
 .globl  s__DATA             ; DATAエリアの開始アドレス
@@ -12,6 +13,8 @@
 .org 0x0000
     jp start
 
+.org 0x0038
+    jp _ctc_isr
 
 .area _HOME
 .area _CODE
