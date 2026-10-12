@@ -1,5 +1,6 @@
 #include <stdint.h>
 
+#include "interrupt.h"
 #include "io.h"
 #include "port.h"
 #include "uart.h"
@@ -16,22 +17,15 @@ void ctc_isr() __critical __interrupt(0) {
 }
 
 void main() {
-    // 初期化中は割り込み禁止
-    __asm
-        di
-        im 1
-    __endasm;
-
+    disableInterrupts();
+    setInterruptMode1();
     initializeUart();
 
     // CTC_CH0を1ms周期で割り込みを発生させるように設定
     io_out(CTC_CH0, 0xA7);
     io_out(CTC_CH0, 38);
 
-    // 割り込み許可
-    __asm
-        ei
-    __endasm;
+    enableInterrupts();
 
     while (1) {
         if (flag) {
