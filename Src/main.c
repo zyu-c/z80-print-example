@@ -8,7 +8,7 @@
 volatile uint16_t count = 0;
 volatile uint8_t flag = 0;
 
-void ctc_isr() __critical __interrupt(0) {
+void ctc_isr() __interrupt {
     count++;
     if (count >= 1000) {
         count = 0;
@@ -18,10 +18,11 @@ void ctc_isr() __critical __interrupt(0) {
 
 void main() {
     disableInterrupts();
-    setInterruptMode1();
+    setInterruptMode2();
     initializeUart();
 
     // CTC_CH0を1ms周期で割り込みを発生させるように設定
+    io_out(CTC_CH0, 0x00);
     io_out(CTC_CH0, 0xA7);
     io_out(CTC_CH0, 38);
 

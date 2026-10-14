@@ -1,7 +1,6 @@
 .module crt0
 
 .globl _main
-.globl _ctc_isr
 
 .globl  l__DATA             ; DATAエリアのサイズ
 .globl  s__DATA             ; DATAエリアの開始アドレス
@@ -12,9 +11,6 @@
 .area _HEADER (ABS)
 .org 0x0000
     jp start
-
-.org 0x0038
-    jp _ctc_isr
 
 .area _HOME
 .area _CODE
@@ -30,6 +26,8 @@
 start:
     ld sp,#0xffff           ; スタックポインタの初期化
     call gsinit             ; グローバル変数の初期化
+    ld a, #0x01
+    ld i, a                 ; Iレジスタに0x01をロード
     call _main              ; main関数呼び出し
 
 hang:
